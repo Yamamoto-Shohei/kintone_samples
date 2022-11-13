@@ -1,0 +1,90 @@
+<script>
+  const kintoneExport = document.getElementById('kintone_export')
+  const kintoneHostname = document.getElementById('kintone_hostname')
+  const kintoneHostnameError = document.getElementById('kintone_hostname_error')
+  const kintoneAppId = document.getElementById('kintone_app_id')
+  const kintoneAppIdError = document.getElementById('kintone_app_id_error')
+  const kintoneApiToken = document.getElementById('kintone_api_token')
+  const kintoneApiTokenError = document.getElementById('kintone_api_token_error')
+  const getCount = document.getElementById('get_count')
+  const getCountError = document.getElementById('get_count_error')
+  const exportProgress = document.getElementById('export_progress')
+  const exportArea = document.getElementById('export_area')
+  const exportError = document.getElementById('export_error')
+  const createElement = ({
+    id, tag, type, className, innerText, innerHtml, name, onclick, value, pattern,
+    required, size, onchange, disabled, placeholder, display, selected, rows, cols,
+    height, width, href, target,
+  }) => {
+    const element = document.createElement(tag)
+    if (id) element.id = id
+    if (type) element.type = type
+    if (className) element.className = className
+    if (innerText) element.innerText = innerText
+    if (innerHtml) element.innerHtml = innerHtml
+    if (name) element.name = name
+    if (onclick) element.onclick = onclick
+    if (value) element.value = (value !== 'none') ? value : ''
+    if (pattern) element.pattern = pattern
+    if (required) element.required = required
+    if (size) element.size = size
+    if (onchange) element.onchange = onchange
+    if (placeholder) element.placeholder = placeholder
+    if (selected) element.selected = selected
+    if (rows) element.rows = rows
+    if (cols) element.cols = cols
+    if (href) element.href = href
+    if (target) element.target = target
+    if (disabled) element.style.disabled = disabled
+    if (display) element.style.display = display
+    if (height) element.style.height = height
+    if (width) element.style.width = width
+    return element
+  }
+  kintoneExport.onclick = () => {
+    kintoneHostnameError.innerText = kintoneHostname.validationMessage
+    kintoneHostnameError.style.display = kintoneHostnameError.innerText ? 'block' : 'none'
+    kintoneAppIdError.innerText = kintoneAppId.validationMessage
+    kintoneAppIdError.style.display = kintoneAppIdError.innerText ? 'block' : 'none'
+    kintoneApiTokenError.innerText = kintoneApiToken.validationMessage
+    kintoneApiTokenError.style.display = kintoneApiTokenError.innerText ? 'block' : 'none'
+    getCountError.innerText = getCount.validationMessage
+    getCountError.style.display = getCountError.innerText ? 'block' : 'none'
+    if (kintoneHostnameError.innerText || kintoneAppIdError.innerText || kintoneApiTokenError.innerText || getCountError.innerText) {
+      return
+    }
+    exportError.style.display = 'none'
+    exportProgress.style.display = 'block'
+    google.script.run.withSuccessHandler(
+      (response) => {
+        const div = createElement({tag: 'div', className: 'col s6 center-align'})
+        const link = createElement({
+          tag: 'a',
+          href: response.url,
+          target: '_blank',
+          className: 'waves-effect waves-light btn indigo darken-5',
+        })
+        link.appendChild(createElement({
+          tag: 'span',
+          innerText: response.filename,
+          className: 'blue-grey-text text-lighten-5',
+        }))
+        div.appendChild(link)
+        exportArea.appendChild(div)
+        exportProgress.style.display = 'none'
+      }
+    ).withFailureHandler(
+      (e) => {
+        exportError.innerText = 'エラーが発生しました。入力情報を確認してください。' + JSON.stringify(e)
+        exportError.style.display = 'block'
+        exportProgress.style.display = 'none'
+      }
+    )
+    .exportKintoneAppData({
+      hostname: kintoneHostname.value,
+      app_id: kintoneAppId.value,
+      api_token: kintoneApiToken.value,
+      get_count: getCount.value,
+    })
+  }
+</script>
