@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <base target="_top">
+  </head>
+  <body>
+    <div class="row">
+      <div class="col s12"><h3 class="blue-text text-darken-2 center-align">Kintone export to SpreadSheet</h3></div>
+      <div class="col s5">
+        <blockquote>
+          Kintoneの情報を指定して、SpreadSheetにデータを出力します。
+        </blockquote>
+        <ul>
+          <li>
+            <div class="teal-text text-darken-1">
+              <span>Hostname</span>
+              <label>データを取得する対象のKintoneホスト名(URLのhttp://{ここの部分}/)</label>
+            </div>
+          </li>
+          <li>
+            <div class="teal-text text-darken-1">
+              <span>App id</span>
+              <label>データを取得するアプリケーションのID</label>
+            </div>
+          </li>
+          <li>
+            <div class="teal-text text-darken-1">
+              <span>Api token</span>
+              <label>データを取得するアプリケーションの参照権限を持つAPIトークン</label>
+            </div>
+          </li>
+          <li>
+            <div class="teal-text text-darken-1">
+              <span>Get count</span>
+              <label>取得する最大件数を指定します。件数が多くなると、タイムアウトになる可能性があります。</label>
+            </div>
+          </li>
+        </ul>
+      </div>
+      <div class="col s7">
+        <div class="input-field col s11">
+          <input placeholder="xxxx.cybozu.com" id="kintone_hostname" type="text" pattern="[a-zA-Z0-9]+.cybozu.com" required class="validate">
+          <label for="Kintone Hostname">Kintone Hostname</label>
+          <span id="kintone_hostname_error" class="new badge red" data-badge-caption="" style="display: none;"></span>
+        </div>
+        <div class="input-field col s3">
+          <input placeholder="13" id="kintone_app_id" type="number" min="1" required class="validate">
+          <label for="Kintone app id">Kintone app id</label>
+          <span id="kintone_app_id_error" class="new badge red" data-badge-caption="" style="display: none;"></span>
+        </div>
+        <div class="input-field col s8">
+          <input placeholder="Kintone api token" id="kintone_api_token" type="text" required pattern="[a-zA-Z0-9]+" class="validate">
+          <label for="Kintone api token">Kintone api token</label>
+          <span id="kintone_api_token_error" class="new badge red" data-badge-caption="" style="display: none;"></span>
+        </div>
+        <div class="input-field col s3">
+          <input placeholder="100" value="100" id="get_count" type="number" min="1" required class="validate">
+          <label for="Get count">Get count</label>
+          <span id="get_count_error" class="new badge red" data-badge-caption="" style="display: none;"></span>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="input-field col s6 offset-s5">
+        <div class="center-align">
+          <a id="kintone_export" class="waves-effect waves-light btn-large">Kintone データ取得</a>
+          <div id="export_progress" class="progress" style="display: none;">
+            <div class="indeterminate"></div>
+          </div>
+          <span id="export_error" class="new badge red" data-badge-caption="" style="display: none;"></span>
+        </div>
+      </div>
+    </div>
+    <div class="divider"></div>
+    <div id="export_area" class="row"><h6 class="blue-text text-darken-2 center-align">export report</h6></div>
+    <?!= HtmlService.createHtmlOutputFromFile('client_js').getContent(); ?>
+  </body>
+</html>
